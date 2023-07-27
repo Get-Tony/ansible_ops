@@ -17,20 +17,20 @@
     ssh_keys_folder: "~/.ssh"
 
     # Root .shosts entries
-    root_shosts_entries:
-      - hostname: remote1
-        user_name: john
-        state: present
-      - hostname: remote2
-        user_name: jane
-        state: absent
+    # root_shosts_entries:
+    #   - hostname: remote1
+    #     user_name: john
+    #     state: present
+    #   - hostname: remote2
+    #     user_name: jane
+    #     state: absent
 
     # Root user configuration
-    root_users:
-      - user_name: john
-        state: present
-      - user_name: jane
-        state: absent
+    # root_users:
+    #   - user_name: john
+    #     state: present
+    #   - user_name: jane
+    #     state: absent
 
     # Configure user access
     # users:
