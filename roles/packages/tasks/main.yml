@@ -1,0 +1,29 @@
+---
+# File: packages/tasks/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Common tasks for all hosts.
+#
+
+# Install default packages
+- name: Install default packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop: "{{ default_packages }}"
+  when: default_packages is defined
+  register: default_package_result
+  failed_when: default_package_result.failed and 'No package' not in default_package_result.failures[0]
+  tags:
+    - packages
+
+# Install custom packages
+- name: Install custom packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop: "{{ custom_packages }}"
+  when: custom_packages is defined
+  register: custom_package_result
+  failed_when: custom_package_result.failed and 'No package' not in custom_package_result.failures[0]
+  tags:
+    - packages

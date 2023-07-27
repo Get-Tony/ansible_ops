@@ -1,0 +1,15 @@
+---
+# File: packages/defaults/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Variables for the packages role.
+#
+
+# Default packages to install
+default_packages:
+  - git
+  - vim
+  - curl
+  - wget
+  - rsync

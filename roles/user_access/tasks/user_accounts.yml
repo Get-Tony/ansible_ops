@@ -1,0 +1,83 @@
+---
+# File: user_access/tasks/user_accounts.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks to configure user access.
+#
+
+# Ensure that the sudo package is installed on the system
+- name: Ensure sudo is installed
+  ansible.builtin.package:
+    name: sudo
+    state: present
+  when: ansible_distribution in ['Debian', 'Ubuntu', 'RedHat', 'CentOS', 'Rocky']
+  tags:
+    - user_accounts
+
+# Create the required groups
+- name: Create groups
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - sudo
+  tags:
+    - user_accounts
+
+# Create the new users
+- name: Process users
+  ansible.builtin.user:
+    name: "{{ item.user_name }}"
+    generate_ssh_key: false
+    state: "{{ item.state }}"
+    append: false # Remove the user from all non-specified groups
+    groups: "{{ item.groups }}"
+    shell: /bin/bash
+    remove: "{{ item.state == 'absent' }}"  # Remove the user if the state is set to absent
+  with_items: "{{ users }}"
+  tags:
+    - user_accounts
+
+# Set a variable for the SSH key file contents
+- name: Read SSH key
+  ansible.builtin.set_fact:
+    user_ssh_key: "{{ lookup('file', ssh_keys_folder + '/' + item.user_name + '.pub', errors='ignore') }}"
+  with_items: "{{ users }}"
+  when: item.state == 'present'
+  tags:
+    - user_accounts
+
+# Create the .ssh directory for each user
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ item.user_name }}/.ssh"
+    state: directory
+    mode: '0700'
+  with_items: "{{ users }}"
+  when: item.state == 'present'
+  changed_when: false
+  tags:
+    - user_accounts
+
+# Create the authorized_keys file for each user
+- name: Ensure authorized_keys file exists
+  ansible.builtin.file:
+    path: "/home/{{ item.user_name }}/.ssh/authorized_keys"
+    state: touch
+    mode: '0600'
+  with_items: "{{ users }}"
+  when: item.state == 'present'
+  changed_when: false
+  tags:
+    - user_accounts
+
+# Add the SSH keys to authorized_keys
+- name: Add SSH key to authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ item.user_name }}"
+    key: "{{ user_ssh_key }}"
+  with_items: "{{ users }}"
+  when: user_ssh_key is defined and user_ssh_key != '' and item.state == 'present'
+  tags:
+    - user_accounts

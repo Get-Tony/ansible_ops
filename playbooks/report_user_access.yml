@@ -1,0 +1,77 @@
+---
+# File: report_ssh_access.yml
+# Created by: GitHub Copilot
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: This playbook will generate a report of the SSH access configuration
+#     for each host in the inventory.
+#
+
+- name: "Report: SSH access configuration"
+  hosts: all
+  become: true
+
+  vars:
+    output_directory: "./reports/ssh"
+
+  tasks:
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ output_directory }}"
+        state: directory
+        mode: '0755' # drwxr-xr-x
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - ssh
+
+    - name: Check if .shosts file exists for root user
+      ansible.builtin.stat:
+        path: /root/.shosts
+      register: shosts_file
+      tags:
+        - ssh
+
+    - name: Check if authorized_keys file exists for root user
+      ansible.builtin.stat:
+        path: /root/.ssh/authorized_keys
+      register: authorized_keys_file
+      tags:
+        - ssh
+
+    - name: Get .shosts file entries for root user
+      ansible.builtin.command: "cat /root/.shosts"
+      register: shosts_entries
+      changed_when: false
+      failed_when: false
+      when: shosts_file.stat.exists
+      tags:
+        - ssh
+
+    - name: Get authorized keys for root user
+      ansible.builtin.command: "cat /root/.ssh/authorized_keys"
+      register: authorized_keys
+      changed_when: false
+      failed_when: false
+      when: authorized_keys_file.stat.exists
+      tags:
+        - ssh
+
+    - name: Save SSH configuration to file
+      ansible.builtin.copy:
+        content: |
+          # SSH access configuration for {{ inventory_hostname }}:
+          # .shosts:
+          {{ shosts_entries.stdout }}
+
+          # authorized_keys:
+          {{ authorized_keys.stdout }}
+        dest: "{{ output_directory }}/user_access_{{ inventory_hostname }}_{{ ansible_date_time.date }}.txt"
+        mode: '0644' # -rw-r--r--
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+      when: authorized_keys.stdout is defined and shosts_entries.stdout is defined
+      delegate_to: localhost
+      tags:
+        - ssh

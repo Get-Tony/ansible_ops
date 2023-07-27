@@ -1,0 +1,46 @@
+---
+# File: report_firewalld_config.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: This playbook will generate a report of the firewalld configuration
+#     for each host in the inventory.
+#
+
+- name: "Report: firewalld configuration"
+  hosts: all
+  become: true
+
+  vars:
+    output_directory: "./reports/firewalld"
+
+  tasks:
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ output_directory }}"
+        state: directory
+        mode: '0755' # drwxr-xr-x
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - firewall
+
+    - name: Get firewalld configuration
+      ansible.posix.firewalld_info:
+      register: firewalld_config
+      tags:
+        - firewall
+
+    - name: Save firewalld configuration to file
+      ansible.builtin.copy:
+        content: "{{ firewalld_config | to_nice_yaml }}"
+        dest: "{{ output_directory }}/firewalld_config_{{ inventory_hostname }}_{{ ansible_date_time.date }}.yml"
+        mode: '0644' # -rw-r--r--
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - firewall

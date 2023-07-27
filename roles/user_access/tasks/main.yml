@@ -1,0 +1,28 @@
+---
+# File: user_access/tasks/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks for the user_access role.
+#
+
+# Include the tasks to configure root access
+- name: Configure root access
+  ansible.builtin.include_tasks: root_access.yml
+  tags:
+    - root_access
+  when: root_users is defined
+
+# Include the tasks to configure users
+- name: Configure user access
+  ansible.builtin.include_tasks: user_accounts.yml
+  tags:
+    - user_accounts
+  when: users is defined
+
+# Include the tasks to configure .shosts files
+- name: Configure .shosts access
+  ansible.builtin.include_tasks: root_shosts.yml
+  tags:
+    - shosts
+  when: root_shosts_entries is defined

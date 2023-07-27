@@ -1,0 +1,73 @@
+---
+# File: site.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Playbook to configure managed systems.
+# Dependencies: packages, sshd_config, user_access, firewalld, shosts
+# Usage: ansible-playbook -i inventory site.yml
+#
+
+- name: Configure managed systems
+  hosts: managed_hosts
+  become: true
+  gather_facts: true
+  vars:
+    # SSH keys folder
+    ssh_keys_folder: "~/.ssh"
+
+    # Root .shosts entries
+    root_shosts_entries:
+      - hostname: remote1
+        user_name: john
+        state: present
+      - hostname: remote2
+        user_name: jane
+        state: absent
+
+    # Root user configuration
+    root_users:
+      - user_name: john
+        state: present
+      - user_name: jane
+        state: absent
+
+    # Configure user access
+    # users:
+    #   - user_name: john
+    #     groups:
+    #       - sudo
+    #     state: present
+    #   - user_name: jane
+    #     groups:
+    #       - sudo
+    #     state: absent
+
+    # SSHD configuration options
+    # sshd_config_options:
+    #   - option: AddressFamily
+    #     value: inet
+    #   - option: PermitRootLogin
+    #     value: 'yes'
+    #   - option: PermitEmptyPasswords
+    #     value: 'no'
+    #   - option: PubkeyAuthentication
+    #     value: 'yes'
+    #   - option: HostbasedAuthentication
+    #     value: 'yes'
+    #   - option: IgnoreRhosts
+    #     value: 'no'
+
+    # Custom packages to install
+    # custom_packages:
+    #   - ncdu # NCurses Disk Usage
+
+    # Firewall rules
+    # firewall_rules:
+    #   - "8443/tcp"
+
+  roles:
+    - packages
+    - sshd_config
+    - user_access
+    # - firewalld

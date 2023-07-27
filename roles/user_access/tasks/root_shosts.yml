@@ -1,0 +1,25 @@
+---
+# File: user_access/tasks/root_shosts.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks for the shosts role.
+#
+
+- name: Ensure .shosts file exists for root user
+  ansible.builtin.file:
+    path: /root/.shosts
+    state: touch
+    mode: '0644' # -rw-r--r--
+  tags: shosts
+  when: root_shosts_entries is defined
+  changed_when: false
+
+- name: Add or remove entries from the root .shosts file
+  ansible.builtin.lineinfile:
+    path: /root/.shosts
+    line: "{{ item.hostname }}    {{ item.user_name }}"
+    state: "{{ item.state }}"
+  loop: "{{ root_shosts_entries }}"
+  when: root_shosts_entries is defined
+  tags: shosts

@@ -1,0 +1,51 @@
+---
+# File: user_access/tasks/configure_root_access.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks to configure root access.
+#
+
+# Create .ssh directory if it doesn't exist
+- name: Ensure .ssh directory
+  ansible.builtin.file:
+    path: /root/.ssh
+    state: directory
+    mode: '0700'
+  become: true
+  changed_when: false
+  tags:
+    - root_access
+
+# Create authorized_keys file if it doesn't exist
+- name: Ensure authorized_keys file
+  ansible.builtin.file:
+    path: /root/.ssh/authorized_keys
+    state: touch
+    mode: '0600'
+  become: true
+  changed_when: false
+  tags:
+    - root_access
+
+# Set a variable for the SSH key file contents
+- name: Read SSH key
+  ansible.builtin.set_fact:
+    user_ssh_key: "{{ lookup('file', ssh_keys_folder + '/' + item.user_name + '.pub', errors='ignore') }}"
+  with_items: "{{ root_users }}"
+  when: item.state == 'present'
+  tags:
+    - root_access
+
+# Add or remove SSH public keys for root user
+- name: Configure root access
+  ansible.builtin.lineinfile:
+    path: /root/.ssh/authorized_keys
+    line: "{{ user_ssh_key }}"
+    state: "{{ item.state }}"
+  become: true
+  loop: "{{ root_users }}"
+  when: item.user_name is defined and user_ssh_key is defined
+  changed_when: false
+  tags:
+    - root_access

@@ -1,0 +1,16 @@
+---
+# File: sshd_config/tasks/backup_sshd_config.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Backup the SSHD configuration file.
+#
+
+- name: Create backup of SSHD configuration file
+  ansible.builtin.copy:
+    remote_src: true
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config.bak
+    mode: preserve
+  tags:
+    - sshd_config_backup

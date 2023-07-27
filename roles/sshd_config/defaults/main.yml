@@ -1,0 +1,22 @@
+---
+# File: sshd_config/defaults/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Variables for the sshd_config role.
+#
+
+# SSHD configuration options
+sshd_config_options:
+  - option: AddressFamily
+    value: inet
+  - option: PermitRootLogin
+    value: 'yes'
+  - option: PermitEmptyPasswords
+    value: 'no'
+  - option: PubkeyAuthentication
+    value: 'yes'
+  - option: HostbasedAuthentication
+    value: 'yes'
+  - option: IgnoreRhosts
+    value: 'no'

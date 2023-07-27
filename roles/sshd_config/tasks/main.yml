@@ -1,0 +1,54 @@
+---
+# File: sshd_config/tasks/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks for the sshd_config role.
+#
+
+# Create a backup of the SSHD configuration file
+- name: Create backup of SSHD configuration file
+  ansible.builtin.include_tasks: backup_sshd_config.yml
+  tags:
+    - sshd_config
+
+# Update the SSHD configuration file with the specified options
+- name: Update SSHD configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^{{ item.option }}\\s"
+    line: "{{ item.option }} {{ item.value }}"
+    state: present
+  with_items: "{{ sshd_config_options }}"
+  register: sshd_config_update
+  changed_when: sshd_config_update.changed
+  tags:
+    - sshd_config
+
+# Check the new SSHD configuration file for errors
+- name: Check new SSHD configuration file for errors
+  ansible.builtin.command: sshd -t
+  register: sshd_config_check_new
+  ignore_errors: true
+  tags:
+    - sshd_config
+  changed_when: false
+
+# Restore the backup of the SSHD configuration file if errors are found
+- name: Restore SSHD configuration backup
+  ansible.builtin.copy:
+    src: "/etc/ssh/sshd_config.bak"
+    dest: "/etc/ssh/sshd_config"
+    mode: '0644'
+  when: sshd_config_check_new.rc != 0
+  tags:
+    - sshd_config
+
+# Restart the SSHD service if the new configuration file is valid
+- name: Restart SSHD
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  when: sshd_config_check_new.rc == 0 and sshd_config_update.changed
+  tags:
+    - sshd_config

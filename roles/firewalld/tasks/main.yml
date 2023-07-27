@@ -1,0 +1,50 @@
+---
+# File: firewalld/tasks/main.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Configure firewalld.
+#
+
+# Install firewalld
+- name: Install firewalld
+  ansible.builtin.package:
+    name: firewalld
+    state: present
+  become: true
+  tags:
+    - firewall
+
+# Configure additional firewall rules
+- name: Configure additional firewall rules
+  ansible.posix.firewalld:
+    zone: public
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+  become: true
+  tags:
+    - firewall
+  loop: "{{ firewall_rules }}"
+  when: firewall_rules is defined
+
+# Allow SSH connections. Ensures that SSH connections are allowed
+# even if the firewall rules are not defined.
+- name: Allow SSH connections
+  ansible.posix.firewalld:
+    service: ssh
+    permanent: true
+    state: enabled
+  become: true
+  tags:
+    - firewall
+
+# Enable the firewall
+- name: Enable firewall
+  ansible.builtin.systemd:
+    name: firewalld
+    state: started
+    enabled: true
+  become: true
+  tags:
+    - firewall

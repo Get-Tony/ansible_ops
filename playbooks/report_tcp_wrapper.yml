@@ -1,0 +1,76 @@
+---
+# File: report_tcp_wrapper.yml
+# Created by: GitHub Copilot
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: This playbook will generate a report of the TCP wrapper configuration
+#     for each host in the inventory.
+#
+
+- name: "Report: TCP Wrapper configuration"
+  hosts: all
+  become: true
+
+  vars:
+    output_directory: "./reports/tcp_wrapper"
+
+  tasks:
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ output_directory }}"
+        state: directory
+        mode: '0755' # drwxr-xr-x
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - tcp_wrapper
+
+    - name: Get hosts.deny contents
+      ansible.builtin.command:
+        cmd: "grep -v '^#' /etc/hosts.deny"
+      register: hosts_deny
+      changed_when: false
+      failed_when: false
+      tags:
+        - tcp_wrapper
+
+    - name: Get hosts.allow contents
+      ansible.builtin.command:
+        cmd: "grep -v '^#' /etc/hosts.allow"
+      register: hosts_allow
+      changed_when: false
+      failed_when: false
+      tags:
+        - tcp_wrapper
+
+    - name: Get hosts.equiv contents
+      ansible.builtin.command:
+        cmd: "grep -v '^#' /etc/hosts.equiv"
+      register: hosts_equiv
+      changed_when: false
+      failed_when: false
+      tags:
+        - tcp_wrapper
+
+    - name: Save TCP Wrapper configuration to file
+      ansible.builtin.copy:
+        content: |
+          # {{ inventory_hostname }}:
+
+          # hosts.equiv:
+          {{ hosts_equiv.stdout }}
+
+          # hosts.deny:
+          {{ hosts_deny.stdout }}
+
+          # hosts.allow:
+          {{ hosts_allow.stdout }}
+
+        dest: "{{ output_directory }}/tcp_wrapper_{{ inventory_hostname }}_{{ ansible_date_time.date }}.txt"
+        mode: '0644' # -rw-r--r--
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+      delegate_to: localhost
+      tags:
+        - tcp_wrapper

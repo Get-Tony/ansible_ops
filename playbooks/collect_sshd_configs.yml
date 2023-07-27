@@ -1,0 +1,39 @@
+---
+# File: playbooks/report_sshd_config.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: This playbook will collect the sshd configuration from each host in the inventory.
+#
+
+- name: "Report: sshd configuration"
+  hosts: all
+  become: true
+
+  vars:
+    output_directory: "./sshd_configs"
+
+  tasks:
+    - name: Ensure report directory exists
+      ansible.builtin.file:
+        path: "{{ output_directory }}"
+        state: directory
+        mode: '0755' # drwxr-xr-x
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - sshd
+
+    - name: Get sshd configuration
+      ansible.builtin.fetch:
+        src: "/etc/ssh/sshd_config"
+        dest: "{{ output_directory }}/sshd_config_{{ inventory_hostname }}_{{ ansible_date_time.date }}"
+        flat: yes
+        mode: '0644' # -rw-r--r--
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+      delegate_to: localhost
+      become: false
+      tags:
+        - sshd
