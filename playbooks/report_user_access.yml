@@ -1,6 +1,6 @@
 ---
 # File: report_ssh_access.yml
-# Created by: GitHub Copilot
+# Created by: Anthony Pagan
 # Date: 2023-07-22
 # License: GPL3 License
 # Description: This playbook will generate a report of the SSH access configuration
