@@ -128,3 +128,6 @@ cython_debug/
 
 # Files
 **/files
+
+# Scripts directory
+**/scripts
