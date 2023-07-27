@@ -1,6 +1,6 @@
 ### Ansible ###
 *.retry
-#**/ansible.cfg
+**/ansible.cfg
 
 ### AnsibleTower ###
 # Ansible runtime and backups
@@ -122,6 +122,9 @@ cython_debug/
 
 # Reports directory
 **/reports
+
+# SSHD Config
+**/sshd_config
 
 # Files
 **/files
