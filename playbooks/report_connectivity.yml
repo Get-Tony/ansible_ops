@@ -7,12 +7,12 @@
 
 - name: "Report: Connectivity"
   hosts: all
-  gather_facts: true
+  gather_facts: false
   strategy: linear
 
   vars:
     output_directory: "./reports"
-    report_file: "{{ output_directory }}/connectivity_report_{{ ansible_date_time.date }}.csv"
+    report_file: "{{ output_directory }}/connectivity_report.csv"
 
   tasks:
     - name: Ensure output directory exists
@@ -29,6 +29,7 @@
 
     - name: Test connectivity to host
       ansible.builtin.ping:
+        timeout: 1
       register: ping_result
       ignore_unreachable: true
       ignore_errors: true
