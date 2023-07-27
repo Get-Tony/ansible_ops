@@ -29,7 +29,7 @@
       ansible.builtin.fetch:
         src: "/etc/ssh/sshd_config"
         dest: "{{ output_directory }}/sshd_config_{{ inventory_hostname }}_{{ ansible_date_time.date }}"
-        flat: yes
+        flat: true
         mode: '0644' # -rw-r--r--
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
