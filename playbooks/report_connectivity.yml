@@ -1,0 +1,45 @@
+---
+# File: test_connectivity.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-27
+# License: GPL3 License
+# Description: This playbook tests if Ansible can connect to all hosts and saves a report of any hosts that cannot be connected to.
+
+- name: "Report: Connectivity"
+  hosts: all
+  gather_facts: false
+
+  vars:
+    output_directory: "./reports"
+    report_file: "{{ output_directory }}/connectivity_report_{{ ansible_date_time.date }}.csv"
+
+  tasks:
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ output_directory }}"
+        state: directory
+        mode: '0755' # drwxr-xr-x
+      delegate_to: localhost
+      become: false
+      changed_when: false
+      tags:
+        - connectivity
+
+    - name: Test connectivity to host
+      ansible.builtin.ping:
+      register: ping_result
+      ignore_unreachable: true
+      tags:
+        - connectivity
+
+    - name: Save connectivity report to file
+      ansible.builtin.lineinfile:
+        path: "{{ report_file }}"
+        line: "{{ inventory_hostname }},{{ ping_result.msg }}"
+        create: true
+        mode: '0644' # -rw-r--r--
+        insertafter: EOF
+      when: ping_result.msg is defined and ping_result.msg != "pong"
+      delegate_to: localhost
+      tags:
+        - connectivity
