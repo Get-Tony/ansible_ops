@@ -21,7 +21,7 @@
         state: directory
         mode: '0755' # drwxr-xr-x
       delegate_to: localhost
-      run_once: true
+      run_once: true # noqa: run-once[task]
       become: false
       changed_when: false
       tags:
@@ -29,7 +29,6 @@
 
     - name: Test connectivity to host
       ansible.builtin.ping:
-        timeout: 1
       register: ping_result
       ignore_unreachable: true
       ignore_errors: true
