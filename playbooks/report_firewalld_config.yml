@@ -8,7 +8,7 @@
 #
 
 - name: "Report: firewalld configuration"
-  hosts: all
+  hosts: all:!Out_of_service
   become: true
 
   vars:

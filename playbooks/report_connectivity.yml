@@ -6,7 +6,7 @@
 # Description: This playbook tests if Ansible can connect to all hosts and saves a report of any hosts that cannot be connected to.
 
 - name: "Report: Connectivity"
-  hosts: all
+  hosts: all:!Out_of_service
   gather_facts: false
   strategy: linear
 
