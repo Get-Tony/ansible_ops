@@ -56,14 +56,23 @@ The following variables are available:
         state: present
     ```
 
-- `tcp_wrappers`: List of TCP wrappers to configure
+- `ansible_controllers`: Group Variable. List of Ansible controllers to configure. Required for TCP wrappers.
   - Example:
 
     ```yaml
-    tcp_wrappers:
-      - hostname: incoming_server1
-        state: present
-    ```
+    ansible_controllers: 
+      - 192.168.59.10
+
+- `tcp_wrapper`: Host Variable. List of TCP wrappers to configure
+  - Example:
+
+    ```yaml
+    tcp_wrapper:
+      sshd:
+        - 192.168.50.2
+        - 192.168.50.3
+      check_mk:
+        - 192.168.50.2
 
 ## Usage
 
