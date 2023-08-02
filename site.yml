@@ -9,7 +9,7 @@
 #
 
 - name: Configure managed systems
-  hosts: managed_hosts
+  hosts: all:!Out_of_service
   become: true
   gather_facts: true
   vars:
@@ -67,7 +67,7 @@
     #   - "8443/tcp"
 
   roles:
-    - packages
     - sshd_config
-    - user_access
+    # - user_access
+    # - packages
     # - firewalld

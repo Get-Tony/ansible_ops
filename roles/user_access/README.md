@@ -56,6 +56,15 @@ The following variables are available:
         state: present
     ```
 
+- `tcp_wrappers`: List of TCP wrappers to configure
+  - Example:
+
+    ```yaml
+    tcp_wrappers:
+      - hostname: incoming_server1
+        state: present
+    ```
+
 ## Usage
 
 To use this role, create a playbook similar to the following:

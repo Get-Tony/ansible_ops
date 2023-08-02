@@ -7,7 +7,7 @@
 #
 
 - name: "Report: sshd configuration"
-  hosts: all
+  hosts: all:!Out_of_service
   become: true
 
   vars:

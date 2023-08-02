@@ -1,0 +1,34 @@
+---
+# File: user_access/tasks/tcp_wrapper.yml
+# Created by: Anthony Pagan
+# Date: 2023-07-22
+# License: GPL3 License
+# Description: Tasks to configure TCP wrappers.
+#
+
+# The playbook will generate a report of the TCP wrapper configuration
+# for each host in the inventory.
+
+- name: Generate hosts.allow file
+  ansible.builtin.template:
+    src: hosts.allow.j2
+    dest: /etc/hosts.allow
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: ansible_controllers is defined and tcp_wrapper is defined
+  tags:
+    - tcp_wrapper
+
+- name: Generate hosts.deny file
+  ansible.builtin.template:
+    src: hosts.deny.j2
+    dest: /etc/hosts.deny
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: ansible_controllers is defined and tcp_wrapper is defined
+  tags:
+    - tcp_wrapper

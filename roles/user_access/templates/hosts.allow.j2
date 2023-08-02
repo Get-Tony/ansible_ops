@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+ALL: LOCAL
+{% for group, members in tcp_wrapper.items() %}
+{% if group == 'sshd' %}
+{{ group }}: {{ ansible_controllers | join(' ') }} {{ members | join(' ') }}
+{% else %}
+{{ group }}: {{ members | join(' ') }}
+{% endif %}
+{% endfor %}
