@@ -15,7 +15,7 @@
 [defaults]
 
 # Private SSH Key for Ansible to use
-private_key_file = ~/.ssh/ansible
+private_key_file = ~/.ssh/id_rsa
 
 # Path to the inventory directory
 inventory=./inventory
@@ -34,6 +34,9 @@ forks=10
 
 # Ansible Managed string
 ansible_managed=Ansible managed: modified on %Y-%m-%d %H:%M:%S
+
+# Transport method
+transport = smart
 
 # Enable fact caching to speed up facts gathering
 fact_caching = jsonfile
