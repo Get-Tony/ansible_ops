@@ -1,5 +1,5 @@
 ---
-# File: report_tcp_wrapper.yml
+# File: playbooks/report_tcp_wrapper.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
 # License: MIT
@@ -12,7 +12,7 @@
   become: true
 
   vars:
-    output_directory: "./reports/tcp_wrapper"
+    output_directory: "./tcp_wrapper_reports"
 
   tasks:
     - name: Ensure output directory exists

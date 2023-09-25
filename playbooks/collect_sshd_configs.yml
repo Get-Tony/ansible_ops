@@ -1,17 +1,18 @@
 ---
-# File: playbooks/report_sshd_config.yml
+# File: playbooks/collect_sshd_configs.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
 # License: MIT
 # Description: This playbook will collect the sshd configuration from each host in the inventory.
 #
 
-- name: "Report: sshd configuration"
+- name: "Collect: sshd configuration"
   hosts: all:!Out_of_service
   become: true
 
   vars:
-    output_directory: "./sshd_configs"
+    # Directory to store the sshd configuration
+    output_directory: "./collected_sshd_configs"
 
   tasks:
     - name: Ensure report directory exists
