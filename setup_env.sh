@@ -5,9 +5,9 @@
 # Updated on: 2023-08-15
 
 REQUIREMENTS_FILE="requirements.txt"
-PYTHON_EXECUTABLE="python3"
-DEFAULT_VENV_DIR=".ansible_venv"
-DEFAULT_VENV_NAME="Ansible"
+PYTHON_COMMAND="python3"
+ANSIBLE_VENV_DIR=".ansible_venv"
+ANSIBLE_VENV_NAME="Ansible"
 
 # Check if the requirements file exists.
 check_requirements_file() {
@@ -19,15 +19,15 @@ check_requirements_file() {
 
 # Check if Python is installed.
 check_python_installed() {
-    if ! command -v "$PYTHON_EXECUTABLE" &>/dev/null; then
-        echo "$PYTHON_EXECUTABLE could not be found."
+    if ! command -v "$PYTHON_COMMAND" &>/dev/null; then
+        echo "$PYTHON_COMMAND could not be found."
         exit 1
     fi
 }
 
 # Check if the python venv module is installed.
 check_venv_module_installed() {
-    if ! "$PYTHON_EXECUTABLE" -c "import venv" &>/dev/null; then
+    if ! "$PYTHON_COMMAND" -c "import venv" &>/dev/null; then
         echo "The python venv module could not be found."
         exit 1
     fi
@@ -36,19 +36,19 @@ check_venv_module_installed() {
 # Create a new virtual environment.
 create_virtual_env() {
     # Check if the virtual environment directory exists.
-    if [ -d "$DEFAULT_VENV_DIR" ]; then
-        echo "$DEFAULT_VENV_DIR already exists."
+    if [ -d "$ANSIBLE_VENV_DIR" ]; then
+        echo "$ANSIBLE_VENV_DIR already exists."
         echo "Do you want to delete it? (y/n)"
         read -r delete_venv
         if [ "$delete_venv" = "y" ]; then
-            echo "Deleting $DEFAULT_VENV_DIR."
-            rm -rf "$DEFAULT_VENV_DIR"
+            echo "Deleting $ANSIBLE_VENV_DIR."
+            rm -rf "$ANSIBLE_VENV_DIR"
             echo "Creating new virtual environment directory."
-            "$PYTHON_EXECUTABLE" -m venv "$DEFAULT_VENV_DIR" --prompt "$DEFAULT_VENV_NAME"
+            "$PYTHON_COMMAND" -m venv "$ANSIBLE_VENV_DIR" --prompt "$ANSIBLE_VENV_NAME"
         fi
     else
         echo "Creating new virtual environment directory."
-        "$PYTHON_EXECUTABLE" -m venv "$DEFAULT_VENV_DIR" --prompt "$DEFAULT_VENV_NAME"
+        "$PYTHON_COMMAND" -m venv "$ANSIBLE_VENV_DIR" --prompt "$ANSIBLE_VENV_NAME"
     fi
 }
 
@@ -73,7 +73,7 @@ setup_virtual_env() {
 # Install Ansible.
 install_ansible() {
     echo "Installing Ansible."
-    "$PYTHON_EXECUTABLE" -m pip install -r "$REQUIREMENTS_FILE"
+    "$PYTHON_COMMAND" -m pip install -r "$REQUIREMENTS_FILE"
 }
 
 # Ensure Ansible is installed.
@@ -89,7 +89,7 @@ print_instructions() {
     echo "
 # Usage Instructions
   - To activate and use the virtual environment, run the following command:
-    source $DEFAULT_VENV_DIR/bin/activate
+    source $ANSIBLE_VENV_DIR/bin/activate
   
   - To deactivate the virtual environment, run the following command:
      deactivate
@@ -98,7 +98,7 @@ print_instructions() {
     ansible-playbook -i inventory.yml playbook.yml
   
   - To run Ansible from outside the virtual environment, run the following command:
-    $DEFAULT_VENV_DIR/bin/ansible-playbook -i inventory.yml playbook.yml
+    $ANSIBLE_VENV_DIR/bin/ansible-playbook -i inventory.yml playbook.yml
 "
 }
 
@@ -108,15 +108,16 @@ main() {
     check_python_installed
     check_venv_module_installed
     setup_virtual_env
-    source "$DEFAULT_VENV_DIR/bin/activate"
+    # Activate the virtual environment.
+    source "$ANSIBLE_VENV_DIR/bin/activate"
     install_ansible
     check_ansible_installed
     print_instructions
 
     # Unset variables used in the script.
-    unset DEFAULT_VENV_DIR
-    unset DEFAULT_VENV_NAME
-    unset PYTHON_EXECUTABLE
+    unset ANSIBLE_VENV_DIR
+    unset ANSIBLE_VENV_NAME
+    unset PYTHON_COMMAND
     unset REQUIREMENTS_FILE
     unset delete_venv
     unset use_virtual_env
