@@ -7,16 +7,16 @@
 #
 
 # SSHD configuration options
-sshd_config_options:
-  - option: AddressFamily
-    value: inet
-  - option: PermitRootLogin
-    value: 'yes'
-  - option: PermitEmptyPasswords
-    value: 'no'
-  - option: PubkeyAuthentication
-    value: 'yes'
-  - option: HostbasedAuthentication
-    value: 'yes'
-  - option: IgnoreRhosts
-    value: 'no'
+# sshd_config_options:
+#   - option: AddressFamily
+#     value: inet
+#   - option: PermitRootLogin
+#     value: 'yes'
+#   - option: PermitEmptyPasswords
+#     value: 'no'
+#   - option: PubkeyAuthentication
+#     value: 'yes'
+#   - option: HostbasedAuthentication
+#     value: 'yes'
+#   - option: IgnoreRhosts
+#     value: 'no'

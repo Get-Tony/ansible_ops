@@ -1,9 +1,11 @@
 ---
-# File: report_connectivity.yml
+# File: playbooks/report_connectivity.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-27
 # License: MIT
-# Description: This playbook tests if Ansible can connect to all hosts and saves a report of any hosts that cannot be connected to.
+# Description: This playbook tests if Ansible can connect to all hosts
+#     and saves a report of any hosts that cannot be connected to.
+#
 
 - name: "Report: Connectivity"
   hosts: all:!Out_of_service
@@ -11,22 +13,10 @@
   strategy: linear
 
   vars:
-    output_directory: "./reports"
-    report_file: "{{ output_directory }}/connectivity_report.csv"
+    # Connectivity report file
+    report_file: "./connectivity_report.csv"
 
   tasks:
-    - name: Ensure output directory exists
-      ansible.builtin.file:
-        path: "{{ output_directory }}"
-        state: directory
-        mode: '0755' # drwxr-xr-x
-      delegate_to: localhost
-      run_once: true # noqa: run-once[task]
-      become: false
-      changed_when: false
-      tags:
-        - connectivity
-
     - name: Test connectivity to host
       ansible.builtin.ping:
       register: ping_result

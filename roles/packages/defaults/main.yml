@@ -10,6 +10,6 @@
 default_packages:
   - git
   - vim
-  - curl
-  - wget
-  - rsync
+  # - curl
+  # - wget
+  # - rsync
