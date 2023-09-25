@@ -2,7 +2,7 @@
 # File: user_access/tasks/main.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: Tasks for the user_access role.
 #
 

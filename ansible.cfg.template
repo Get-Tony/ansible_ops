@@ -1,7 +1,7 @@
 # File: ansible.cfg
 # Created by: Anthony Pagan
 # Created on: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: Ansible configuration file.
 #
 # This file is used to configure Ansible. It is used to set the default

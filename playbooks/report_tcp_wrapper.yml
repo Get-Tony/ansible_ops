@@ -2,7 +2,7 @@
 # File: report_tcp_wrapper.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: This playbook will generate a report of the TCP wrapper configuration
 #     for each host in the inventory.
 #

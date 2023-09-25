@@ -39,4 +39,4 @@ To use this role, create a playbook similar to the following:
 
 ## License
 
-This playbook is licensed under the GPL3 License.
+This playbook is licensed under the MIT License.

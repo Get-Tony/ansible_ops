@@ -2,7 +2,7 @@
 # File: playbooks/report_sshd_config.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: This playbook will collect the sshd configuration from each host in the inventory.
 #
 

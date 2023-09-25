@@ -2,7 +2,7 @@
 # File: packages/defaults/main.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: Variables for the packages role.
 #
 

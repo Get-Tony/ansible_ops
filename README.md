@@ -7,7 +7,7 @@ This Ansible playbook is used to configure managed systems.
 
 ## Notes
 
-- Firewalld will most likly be removed due to complexity.
+- Firewalld will most likely be removed due to complexity.
 - Create a report playbook for tcp_wrapper
 
 ## Dependencies
@@ -125,4 +125,4 @@ ansible-playbook site.yml -l webserver1
 
 ## License
 
-This playbook is licensed under the GPL3 License.
+This playbook is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

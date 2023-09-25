@@ -2,7 +2,7 @@
 # File: site.yml
 # Created by: Anthony Pagan
 # Date: 2023-07-22
-# License: GPL3 License
+# License: MIT
 # Description: Playbook to configure managed systems.
 # Dependencies: packages, sshd_config, user_access, firewalld, shosts
 # Usage: ansible-playbook -i inventory site.yml
