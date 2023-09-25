@@ -22,7 +22,6 @@
 *.gzip
 *.tgz
 
-
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -84,7 +83,7 @@ ipython_config.py
 # Environments
 .env
 .venv
-.*.venv
+.*venv
 env/
 venv/
 ENV/
